@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize"
-import { database } from "../db/db"
+import { DataTypes } from "sequelize";
+import { database } from "../db/db";
 
 export const Book = database.define("Book", {
     title: {
@@ -34,4 +34,4 @@ export const Book = database.define("Book", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-})
+});
