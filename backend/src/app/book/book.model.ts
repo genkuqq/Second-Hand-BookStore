@@ -2,6 +2,12 @@ import { DataTypes } from "sequelize";
 import { database } from "../db/db";
 
 export const Book = database.define("Book", {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false,
+    },
     title: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -15,6 +21,10 @@ export const Book = database.define("Book", {
         allowNull: false,
     },
     publisher: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    released: {
         type: DataTypes.STRING,
         allowNull: false,
     },

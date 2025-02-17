@@ -16,6 +16,7 @@ export async function addBook() {
             author: "test",
             isbn: "isbn",
             publisher: "publisher",
+            released: "test",
             genre: "genre",
             price: 1,
             quantity: 1,
