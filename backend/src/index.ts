@@ -5,8 +5,6 @@ import { database } from "./app/db/db";
 import { Book } from "./app/book/book.model";
 import routes from "./app/routes";
 
-Book.sync();
-
 const app: Express = express();
 const port = 3000;
 
