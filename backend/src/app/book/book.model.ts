@@ -1,6 +1,8 @@
 import { DataTypes } from "sequelize";
 import { database } from "../db/db";
 
+// Why should i create a book from stratch instead getting from library apis?
+
 export const Book = database.define("Book", {
     id: {
         type: DataTypes.INTEGER,
