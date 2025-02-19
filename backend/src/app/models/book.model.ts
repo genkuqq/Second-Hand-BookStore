@@ -1,10 +1,6 @@
 import { DataTypes } from "sequelize";
 import { database } from "../db/db";
 
-export interface IBook {
-    Book: typeof Book;
-}
-
 export const Book = database.define("Book", {
     id: {
         type: DataTypes.INTEGER,
