@@ -3,6 +3,9 @@ import bodyParser from "body-parser";
 import { router } from "./app/routes";
 import { database } from "./app/db/db";
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 const app = express();
 const port = 3000;
 

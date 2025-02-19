@@ -12,6 +12,7 @@
     "dev": "nodemon src/index.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.4.0",
     "express": "^4.21.2",
     "pg": "^8.13.3",
     "sequelize": "^6.37.5"
@@ -20,6 +21,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
     "nodemon": "^3.1.9",
+    "prisma": "^6.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
