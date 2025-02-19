@@ -1,15 +1,9 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters", "prismaSchemaFolder"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = "postgresql://postgres:root@localhost:5432/te"
-}
-
-model User {
-  id    Int     @id @default(autoincrement())
-  namee String?
-  email String  @unique
 }
