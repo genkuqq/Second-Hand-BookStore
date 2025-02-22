@@ -54,3 +54,49 @@ export async function addBook(req: Request, res: Response) {
         }
     }
 }
+
+export async function updateBook(req: Request, res: Response) {
+    const bookBody = req.body;
+    const bookID = req.params.id;
+    const oldBook = await prisma.book.findFirst({
+        where: { id: Number(bookID) },
+    });
+    if (!bookBody || !oldBook) {
+        res.status(400).json({ error: "something wrong" });
+    } else {
+        try {
+            const user = await prisma.book.update({
+                where: {
+                    id: Number(bookID),
+                },
+                data: {
+                    ...bookBody,
+                },
+            });
+            if (!user) {
+                res.status(400).json({ error: "error creation" });
+            } else {
+                res.status(200).json({ user });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+export async function removeBook(req: Request, res: Response) {
+    const bookID = req.params.id;
+    const oldBook = await prisma.book.findFirst({
+        where: { id: Number(bookID) },
+    });
+    if (!oldBook) {
+        res.status(400).json({ error: "something wrong" });
+    } else {
+        try {
+            await prisma.book.delete({ where: { id: Number(bookID) } });
+            res.status(200);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
