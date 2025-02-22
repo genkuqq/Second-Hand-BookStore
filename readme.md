@@ -3,23 +3,30 @@
 </div>
 
 > ### Current Task
-> Add/Browse/Detail Books
+>
+> Bookshelves
 
 ### Project Overview
+
 This project designed for the buying/selling and renting of second-hand books.
 
 ## Features
 
-- [ ] Books
-    - [ ] Adding books for fully details
-    - [ ] Book listings
-        - [ ] Browse books
-        - [ ] Search and filter
-    - [ ] Buy book
-    - [ ] Store this book in our warehouse
-    - [ ] Sell / Rent book
-- [ ] User Registration and Login
-- [ ] Web GUI
+-   [ ] Books
+    -   [x] Adding books for fully details
+    -   [ ] Book listings
+        -   [ ] Browse books
+        -   [ ] Search and filter
+    -   [ ] Buy book
+    -   [ ] Store this book in our warehouse
+    -   [ ] Sell / Rent book
+-   [ ] Bookshelves
+    -   [ ] Shelves
+    -   [ ] Adding to our warehouse
+    -   [ ] Storing books
+    -   [ ] Recommendation for book placement
+-   [ ] User Registration and Login
+-   [ ] Web GUI
 
 ## Note
 
