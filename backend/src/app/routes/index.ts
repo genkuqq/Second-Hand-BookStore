@@ -1,5 +1,5 @@
 import { Router } from "express";
-import bookRoutes from "./book.route";
+import bookRoutes from "./book.routes";
 
 const router = Router();
 router.get("/", (req, res) => {
