@@ -9,6 +9,8 @@ model Book {
     price      Int
     quantity   Int
     coverImage String
+    shelf      Shelf?   @relation(fields: [shelfId], references: [id])
+    shelfId    Int?
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
 }

@@ -1,0 +1,7 @@
+model Shelf {
+    id        Int      @id @default(autoincrement())
+    tag       String
+    books     Book[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
