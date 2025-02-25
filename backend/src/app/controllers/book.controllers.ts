@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { Book, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export async function getBooks(req: Request, res: Response): Promise<any> {
     try {
         const books = await prisma.book.findMany();
         if (!books || books.length == 0) {
-            res.status(400).json({ error: "not found" });
+            return res.status(400).json({ error: "not found" });
         }
-        res.status(200).json({ books });
+        return res.status(200).json({ books });
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ message: "something wrong" });
+        return res.status(500).json({ message: "something wrong" });
     }
 }
 
@@ -27,7 +27,7 @@ export async function getBook(req: Request, res: Response): Promise<any> {
         return res.status(200).json(book);
     } catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.status(500).json({ message: "something wrong" });
     }
 }
 
@@ -35,7 +35,7 @@ export async function addBook(req: Request, res: Response): Promise<any> {
     const bookBody = req.body;
     try {
         if (!bookBody) {
-            res.status(400).json({ error: "not body" });
+            return res.status(400).json({ error: "not body" });
         }
         const book = await prisma.book.create({
             data: {
@@ -45,7 +45,7 @@ export async function addBook(req: Request, res: Response): Promise<any> {
         return res.status(200).json({ book });
     } catch (error) {
         console.log(error);
-        return res.sendStatus(500).json({ message: "something wrong" });
+        return res.status(500).json({ message: "something wrong" });
     }
 }
 
