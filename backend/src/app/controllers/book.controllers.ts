@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export async function getBooks(req: Request, res: Response) {
+export async function getBooks(req: Request, res: Response): Promise<any> {
     try {
         const books = await prisma.book.findMany();
         if (!books || books.length == 0) {
@@ -15,23 +15,23 @@ export async function getBooks(req: Request, res: Response) {
     }
 }
 
-export async function getBook(req: Request, res: Response) {
+export async function getBook(req: Request, res: Response): Promise<any> {
     const bookID = req.params.id;
     try {
         const book = await prisma.book.findUnique({
             where: { id: Number(bookID) },
         });
         if (!book) {
-            res.status(404).json({ error: "not found" });
+            return res.status(404).json({ message: "test" });
         }
-        res.status(200).json({ book });
+        return res.status(200).json(book);
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ message: "something wrong" });
+        return res.sendStatus(500);
     }
 }
 
-export async function addBook(req: Request, res: Response) {
+export async function addBook(req: Request, res: Response): Promise<any> {
     const bookBody = req.body;
     try {
         if (!bookBody) {
@@ -42,14 +42,14 @@ export async function addBook(req: Request, res: Response) {
                 ...bookBody,
             },
         });
-        res.status(200).json({ book });
+        return res.status(200).json({ book });
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ message: "something wrong" });
+        return res.sendStatus(500).json({ message: "something wrong" });
     }
 }
 
-export async function updateBook(req: Request, res: Response) {
+export async function updateBook(req: Request, res: Response): Promise<any> {
     const bookBody = req.body;
     const bookID = req.params.id;
     try {
@@ -57,10 +57,10 @@ export async function updateBook(req: Request, res: Response) {
             where: { id: Number(bookID) },
         });
         if (!oldBook) {
-            res.status(404).json({ error: "book missing" });
+            return res.status(404).json({ error: "book missing" });
         }
         if (!bookBody) {
-            res.status(400).json({ error: "body empty" });
+            return res.status(400).json({ error: "body empty" });
         }
         const newBook = await prisma.book.update({
             where: {
@@ -70,26 +70,26 @@ export async function updateBook(req: Request, res: Response) {
                 ...bookBody,
             },
         });
-        res.status(200).json({ newBook });
+        return res.status(200).json({ newBook });
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ message: "something wrong" });
+        return res.sendStatus(500).json({ message: "something wrong" });
     }
 }
 
-export async function removeBook(req: Request, res: Response) {
+export async function removeBook(req: Request, res: Response): Promise<any> {
     const bookID = req.params.id;
     try {
         const oldBook = await prisma.book.findFirst({
             where: { id: Number(bookID) },
         });
         if (!oldBook) {
-            res.status(400).json({ error: "book not found" });
+            return res.status(400).json({ error: "book not found" });
         }
         await prisma.book.delete({ where: { id: Number(bookID) } });
-        res.status(200).json({ message: "book gone" });
+        return res.status(200).json({ message: "book gone" });
     } catch (error) {
         console.log(error);
-        res.sendStatus(500).json({ message: "something wrong" });
+        return res.sendStatus(500).json({ message: "something wrong" });
     }
 }
