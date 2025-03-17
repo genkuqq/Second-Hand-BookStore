@@ -1,10 +1,10 @@
 <div align="center">
-    <h3 align="center">Second Hand BookStore</h3>
+    <h3 align="center">Second Hand Book Store</h3>
 </div>
 
 > ### Current Task
 >
-> Bookshelves
+> Recommendation for book placement
 
 ### Project Overview
 
@@ -23,11 +23,11 @@ This project designed for the buying/selling and renting of second-hand books.
 - [ ] Bookshelves
   - [ ] Shelves
   - [ ] Adding to our warehouse
-  - [ ] Storing books
+  - [x] Storing books
   - [ ] Recommendation for book placement
 - [ ] User Registration and Login
 - [ ] Web GUI
 
 ## Note
 
-This is for educational purposes only. You also not allowed to sell or re-upload this project as your own without my permission. use it at your own risk.
+This is for educational purposes only. You also not allowed to sell or re-upload this project as your own without my permission. Use it at your own risk.
