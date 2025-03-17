@@ -56,7 +56,7 @@ export async function addBooktoShelf(
 ): Promise<any> {
 	const { bookID, shelfID } = req.query;
 	try {
-		const book = await prisma.shelf.findFirst({
+		const book = await prisma.book.findUnique({
 			where: { id: Number(bookID) },
 		});
 		if (!book) {
@@ -86,6 +86,61 @@ export async function addBooktoShelf(
 	} catch (error) {
 		console.log(error);
 		return res.sendStatus(500).json({ message: "something wrong" });
+	}
+}
+
+export async function removeBookFromShelf(
+	req: Request,
+	res: Response
+): Promise<any> {
+	const { bookID, shelfID } = req.query;
+	try {
+		const book = await prisma.shelf.findMany({
+			select: {
+				_count: {
+					select: {
+						books: {
+							where: {
+								id: Number(bookID),
+							},
+						},
+					},
+				},
+			},
+			//where: { id: Number(shelfID) },
+			//select: {
+			//books: {
+			//where: { id: Number(bookID) },
+			//},
+			//},
+		});
+		if (!book) {
+			return res.status(404).json({ error: "book missing" });
+		}
+		await prisma.book.update({
+			where: {
+				id: Number(bookID),
+			},
+			data: {
+				shelf: {
+					disconnect: { id: Number(shelfID) },
+				},
+			},
+		});
+		await prisma.shelf.update({
+			where: {
+				id: Number(shelfID),
+			},
+			data: {
+				books: {
+					disconnect: { id: Number(bookID) },
+				},
+			},
+		});
+		return res.status(200).json({ message: "book removed" });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "something wrong" });
 	}
 }
 
