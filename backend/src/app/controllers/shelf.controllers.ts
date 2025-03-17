@@ -62,26 +62,28 @@ export async function addBooktoShelf(
 		if (!book) {
 			return res.status(404).json({ error: "book missing" });
 		}
-		const transfer = await prisma.book.update({
-			where: {
-				id: Number(bookID),
-			},
-			data: {
-				shelf: {
-					connect: { id: Number(shelfID) },
+		const transfer = await prisma.$transaction([
+			prisma.book.update({
+				where: {
+					id: Number(bookID),
 				},
-			},
-		});
-		await prisma.shelf.update({
-			where: {
-				id: Number(shelfID),
-			},
-			data: {
-				books: {
-					connect: { id: Number(bookID) },
+				data: {
+					shelf: {
+						connect: { id: Number(shelfID) },
+					},
 				},
-			},
-		});
+			}),
+			prisma.shelf.update({
+				where: {
+					id: Number(shelfID),
+				},
+				data: {
+					books: {
+						connect: { id: Number(bookID) },
+					},
+				},
+			}),
+		]);
 		return res.status(200).json({ transfer });
 	} catch (error) {
 		console.log(error);
@@ -107,36 +109,32 @@ export async function removeBookFromShelf(
 					},
 				},
 			},
-			//where: { id: Number(shelfID) },
-			//select: {
-			//books: {
-			//where: { id: Number(bookID) },
-			//},
-			//},
 		});
 		if (!book) {
 			return res.status(404).json({ error: "book missing" });
 		}
-		await prisma.book.update({
-			where: {
-				id: Number(bookID),
-			},
-			data: {
-				shelf: {
-					disconnect: { id: Number(shelfID) },
+		await prisma.$transaction([
+			prisma.book.update({
+				where: {
+					id: Number(bookID),
 				},
-			},
-		});
-		await prisma.shelf.update({
-			where: {
-				id: Number(shelfID),
-			},
-			data: {
-				books: {
-					disconnect: { id: Number(bookID) },
+				data: {
+					shelf: {
+						disconnect: { id: Number(shelfID) },
+					},
 				},
-			},
-		});
+			}),
+			prisma.shelf.update({
+				where: {
+					id: Number(shelfID),
+				},
+				data: {
+					books: {
+						disconnect: { id: Number(bookID) },
+					},
+				},
+			}),
+		]);
 		return res.status(200).json({ message: "book removed" });
 	} catch (error) {
 		console.log(error);
