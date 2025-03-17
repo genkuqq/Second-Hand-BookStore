@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Book, PrismaClient } from "@prisma/client";
+import { findBestPlacement } from "../utils/bookplacement";
 const prisma = new PrismaClient();
 
 export async function getBooks(req: Request, res: Response): Promise<any> {
@@ -24,7 +25,8 @@ export async function getBook(req: Request, res: Response): Promise<any> {
 		if (!book) {
 			return res.status(404).json({ message: "test" });
 		}
-		return res.status(200).json(book);
+		const test = await findBestPlacement(Number(bookID));
+		return res.status(200).json({ book, test: test.id });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "something wrong" });
