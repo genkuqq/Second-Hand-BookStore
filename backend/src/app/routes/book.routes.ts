@@ -10,9 +10,10 @@ import {
 const router = Router();
 
 router.get("/", getBooks);
-router.get("/:id", getBook);
-router.post("/", addBook);
-router.put("/:id", updateBook);
-router.delete("/:id", removeBook);
+router.get("/getbook", getBook);
+router.get("/nonplaced");
+router.post("/addbook", addBook);
+router.put("/updatebook", updateBook);
+router.delete("/removebook", removeBook);
 
 export default router;

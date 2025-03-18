@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	addBooktoShelf,
 	addShelf,
+	findPlacement,
 	getShelf,
 	getShelves,
 	removeBookFromShelf,
@@ -12,11 +13,12 @@ import {
 const router = Router();
 
 router.get("/", getShelves);
-router.get("/:id", getShelf);
-router.post("/", addShelf);
+router.get("/getshelf", getShelf);
+router.post("/addshelf", addShelf);
 router.put("/addbook", addBooktoShelf);
 router.put("/removebook", removeBookFromShelf);
-router.put("/:id", updateShelf);
-router.delete("/:id", removeShelf);
+router.put("/updateshelf", updateShelf);
+router.delete("/removeshelf", removeShelf);
+router.get("/placement", findPlacement);
 
 export default router;

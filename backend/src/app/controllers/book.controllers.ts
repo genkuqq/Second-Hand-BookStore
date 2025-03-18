@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Book, PrismaClient } from "@prisma/client";
-import { findBestPlacement } from "../utils/bookplacement";
+import { findBestPlacement } from "../utils/book";
 const prisma = new PrismaClient();
 
 export async function getBooks(req: Request, res: Response): Promise<any> {
@@ -17,7 +17,7 @@ export async function getBooks(req: Request, res: Response): Promise<any> {
 }
 
 export async function getBook(req: Request, res: Response): Promise<any> {
-	const bookID = req.params.id;
+	const bookID = req.query.bookID;
 	try {
 		const book = await prisma.book.findUnique({
 			where: { id: Number(bookID) },
@@ -25,8 +25,7 @@ export async function getBook(req: Request, res: Response): Promise<any> {
 		if (!book) {
 			return res.status(404).json({ message: "test" });
 		}
-		const test = await findBestPlacement(Number(bookID));
-		return res.status(200).json({ book, test: test.id });
+		return res.status(200).json({ book });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "something wrong" });
@@ -53,7 +52,7 @@ export async function addBook(req: Request, res: Response): Promise<any> {
 
 export async function updateBook(req: Request, res: Response): Promise<any> {
 	const bookBody = req.body;
-	const bookID = req.params.id;
+	const bookID = req.query.bookID;
 	try {
 		const oldBook = await prisma.book.findFirst({
 			where: { id: Number(bookID) },
@@ -80,7 +79,7 @@ export async function updateBook(req: Request, res: Response): Promise<any> {
 }
 
 export async function removeBook(req: Request, res: Response): Promise<any> {
-	const bookID = req.params.id;
+	const bookID = req.query.bookID;
 	try {
 		const oldBook = await prisma.book.findFirst({
 			where: { id: Number(bookID) },

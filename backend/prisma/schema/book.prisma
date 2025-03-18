@@ -1,16 +1,17 @@
 model Book {
-    id         Int      @id @default(autoincrement())
-    title      String
-    author     String
-    isbn       String
-    publisher  String
-    released   String
-    genre      String
-    price      Int
-    quantity   Int
-    coverImage String
-    shelf      Shelf?   @relation(fields: [shelfId], references: [id])
-    shelfId    Int?
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  title      String
+  author     String
+  isbn       String
+  publisher  String
+  released   String
+  genre      String
+  price      Int
+  quantity   Int
+  coverImage String
+  bookWidth  Int
+  shelf      Shelf?   @relation(fields: [shelfId], references: [id])
+  shelfId    Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

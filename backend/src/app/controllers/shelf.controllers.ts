@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { findBestPlacement } from "../utils/book";
 const prisma = new PrismaClient();
 
 export async function getShelves(req: Request, res: Response): Promise<any> {
@@ -16,10 +17,13 @@ export async function getShelves(req: Request, res: Response): Promise<any> {
 }
 
 export async function getShelf(req: Request, res: Response): Promise<any> {
-	const shelfId = req.params.id;
+	const shelfID = req.query.shelfID;
+	if (!shelfID) {
+		return res.status(404).json({ error: "get shelf error" });
+	}
 	try {
 		const shelf = await prisma.shelf.findUnique({
-			where: { id: Number(shelfId) },
+			where: { id: Number(shelfID) },
 			include: { books: true },
 		});
 		if (!shelf) {
@@ -59,8 +63,17 @@ export async function addBooktoShelf(
 		const book = await prisma.book.findUnique({
 			where: { id: Number(bookID) },
 		});
+		const shelf = await prisma.shelf.findUnique({
+			where: { id: Number(shelfID) },
+		});
 		if (!book) {
 			return res.status(404).json({ error: "book missing" });
+		}
+		if (!shelf) {
+			return res.status(404).json({ error: "shelf missing" });
+		}
+		if (book.bookWidth > shelf.emptySpace) {
+			return res.status(404).json({ error: "book cant fit in this shelf" });
 		}
 		const transfer = await prisma.$transaction([
 			prisma.book.update({
@@ -81,6 +94,9 @@ export async function addBooktoShelf(
 					books: {
 						connect: { id: Number(bookID) },
 					},
+					emptySpace: {
+						decrement: book.bookWidth,
+					},
 				},
 			}),
 		]);
@@ -97,6 +113,14 @@ export async function removeBookFromShelf(
 ): Promise<any> {
 	const { bookID, shelfID } = req.query;
 	try {
+		const uniqueBook = await prisma.book.findUnique({
+			where: {
+				id: Number(bookID),
+			},
+		});
+		if (!uniqueBook) {
+			return res.status(404).json({ error: "book not found" });
+		}
 		const book = await prisma.shelf.findMany({
 			select: {
 				_count: {
@@ -111,7 +135,7 @@ export async function removeBookFromShelf(
 			},
 		});
 		if (!book) {
-			return res.status(404).json({ error: "book missing" });
+			return res.status(404).json({ error: "cant find book in shelf" });
 		}
 		await prisma.$transaction([
 			prisma.book.update({
@@ -132,6 +156,9 @@ export async function removeBookFromShelf(
 					books: {
 						disconnect: { id: Number(bookID) },
 					},
+					emptySpace: {
+						increment: uniqueBook.bookWidth,
+					},
 				},
 			}),
 		]);
@@ -144,7 +171,7 @@ export async function removeBookFromShelf(
 
 export async function updateShelf(req: Request, res: Response): Promise<any> {
 	const shelfBody = req.body;
-	const shelfID = req.params.id;
+	const shelfID = req.query.shelfID;
 	try {
 		const oldShelf = await prisma.shelf.findFirst({
 			where: { id: Number(shelfID) },
@@ -171,7 +198,7 @@ export async function updateShelf(req: Request, res: Response): Promise<any> {
 }
 
 export async function removeShelf(req: Request, res: Response): Promise<any> {
-	const shelfID = req.params.id;
+	const shelfID = req.query.shelfID;
 	try {
 		const oldShelf = await prisma.shelf.findFirst({
 			where: { id: Number(shelfID) },
@@ -181,6 +208,22 @@ export async function removeShelf(req: Request, res: Response): Promise<any> {
 		}
 		await prisma.shelf.delete({ where: { id: Number(shelfID) } });
 		return res.status(200).json({ message: "shelf gone" });
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500).json({ message: "something wrong" });
+	}
+}
+export async function findPlacement(req: Request, res: Response): Promise<any> {
+	const bookID = req.query.bookID;
+	if (!bookID) {
+		return res.status(400).json({ error: "enter a idd" });
+	}
+	try {
+		const shelves = await findBestPlacement(Number(bookID));
+		if (!shelves) {
+			return res.status(400).json({ error: "shelves are full" });
+		}
+		return res.status(200).json(shelves);
 	} catch (error) {
 		console.log(error);
 		return res.sendStatus(500).json({ message: "something wrong" });

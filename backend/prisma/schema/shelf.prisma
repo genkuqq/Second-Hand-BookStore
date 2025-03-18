@@ -1,7 +1,8 @@
 model Shelf {
-    id        Int      @id @default(autoincrement())
-    tag       String
-    books     Book[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  tag        String
+  emptySpace Int      @default(80)
+  books      Book[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
